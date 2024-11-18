@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: nginx-applicationset
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: in-cluster
+            environment: dev
+          - cluster: in-cluster
+            environment: qa
+          - cluster: in-cluster
+            environment: prod
+  template:
+    metadata:
+      name: nginx-{{environment}}
+    spec:
+      project: default
+      source:
+        repoURL: 'https://<seu-repositorio>.git'
+        targetRevision: HEAD
+        path: kustomize/overlays/{{environment}}
+        kustomize:
+          namePrefix: nginx-
+      destination:
+        server: '{{cluster}}'
+        namespace: '{{environment}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

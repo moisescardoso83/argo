@@ -1,0 +1,8 @@
+namespace: dev
+resources:
+  - ../../base
+patches:
+  - path: namespace.yaml
+    target:
+      kind: Namespace
+      name: dev
