@@ -1,3 +1,39 @@
+# apiVersion: argoproj.io/v1alpha1
+# kind: ApplicationSet
+# metadata:
+#   name: nginx-applicationset
+#   namespace: argocd
+# spec:
+#   generators:
+#     - list:
+#         elements:
+#           - cluster: docker-desktop
+#             clusterUrl: https://kubernetes.default.svc
+#             environment: dev
+#           - cluster: docker-desktop
+#             clusterUrl: https://kubernetes.default.svc
+#             environment: qa
+#           - cluster: docker-desktop
+#             clusterUrl: https://kubernetes.default.svc
+#             environment: prod
+#   template:
+#     metadata:
+#       name: nginx-{{environment}}
+#     spec:
+#       project: default
+#       source:
+#         repoURL: 'https://github.com/moisescardoso83/argo.git'
+#         targetRevision: main
+#         path: kustomize/overlays/{{environment}}
+#         kustomize:
+#           namePrefix: nginx-{{environment}}-
+#       destination:
+#         server: '{{clusterUrl}}'
+#         namespace: '{{environment}}'
+#       syncPolicy:
+#         automated:
+#           prune: true
+#           selfHeal: true
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -7,25 +43,28 @@ spec:
   generators:
     - list:
         elements:
-          - cluster: in-cluster
+          - cluster: docker-desktop
+            clusterUrl: https://kubernetes.default.svc
             environment: dev
-          - cluster: in-cluster
+          - cluster: docker-desktop
+            clusterUrl: https://kubernetes.default.svc
             environment: qa
-          - cluster: in-cluster
-            environment: prod
+          - cluster: docker-desktop
+            clusterUrl: https://kubernetes.default.svc
+            environment: prod 
   template:
     metadata:
       name: nginx-{{environment}}
     spec:
       project: default
       source:
-        repoURL: 'https://<seu-repositorio>.git'
-        targetRevision: HEAD
+        repoURL: 'https://github.com/moisescardoso83/argo.git'
+        targetRevision: main
         path: kustomize/overlays/{{environment}}
         kustomize:
-          namePrefix: nginx-
+          namePrefix: nginx-{{environment}}-
       destination:
-        server: '{{cluster}}'
+        server: '{{clusterUrl}}'
         namespace: '{{environment}}'
       syncPolicy:
         automated:
