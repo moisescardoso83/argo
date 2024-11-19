@@ -61,8 +61,6 @@ spec:
         repoURL: 'https://github.com/moisescardoso83/argo.git'
         targetRevision: main
         path: kustomize/overlays/{{environment}}
-        kustomize:
-          namePrefix: nginx-{{environment}}-
       destination:
         server: '{{clusterUrl}}'
         namespace: '{{environment}}'
