@@ -1,39 +1,3 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: ApplicationSet
-# metadata:
-#   name: nginx-applicationset
-#   namespace: argocd
-# spec:
-#   generators:
-#     - list:
-#         elements:
-#           - cluster: docker-desktop
-#             clusterUrl: https://kubernetes.default.svc
-#             environment: dev
-#           - cluster: docker-desktop
-#             clusterUrl: https://kubernetes.default.svc
-#             environment: qa
-#           - cluster: docker-desktop
-#             clusterUrl: https://kubernetes.default.svc
-#             environment: prod
-#   template:
-#     metadata:
-#       name: nginx-{{environment}}
-#     spec:
-#       project: default
-#       source:
-#         repoURL: 'https://github.com/moisescardoso83/argo.git'
-#         targetRevision: main
-#         path: kustomize/overlays/{{environment}}
-#         kustomize:
-#           namePrefix: nginx-{{environment}}-
-#       destination:
-#         server: '{{clusterUrl}}'
-#         namespace: '{{environment}}'
-#       syncPolicy:
-#         automated:
-#           prune: true
-#           selfHeal: true
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -51,7 +15,7 @@ spec:
             environment: qa
           - cluster: docker-desktop
             clusterUrl: https://kubernetes.default.svc
-            environment: prod 
+            environment: prod
   template:
     metadata:
       name: nginx-{{environment}}
@@ -61,6 +25,8 @@ spec:
         repoURL: 'https://github.com/moisescardoso83/argo.git'
         targetRevision: main
         path: kustomize/overlays/{{environment}}
+        kustomize:
+          namePrefix: nginx-{{environment}}-
       destination:
         server: '{{clusterUrl}}'
         namespace: '{{environment}}'
@@ -68,3 +34,37 @@ spec:
         automated:
           prune: true
           selfHeal: true
+# apiVersion: argoproj.io/v1alpha1
+# kind: ApplicationSet
+# metadata:
+#   name: nginx-applicationset
+#   namespace: argocd
+# spec:
+#   generators:
+#     - list:
+#         elements:
+#           - cluster: docker-desktop
+#             clusterUrl: https://kubernetes.default.svc
+#             environment: dev
+#           - cluster: docker-desktop
+#             clusterUrl: https://kubernetes.default.svc
+#             environment: qa
+#           - cluster: docker-desktop
+#             clusterUrl: https://kubernetes.default.svc
+#             environment: prod 
+#   template:
+#     metadata:
+#       name: nginx-{{environment}}
+#     spec:
+#       project: default
+#       source:
+#         repoURL: 'https://github.com/moisescardoso83/argo.git'
+#         targetRevision: main
+#         path: kustomize/overlays/{{environment}}
+#       destination:
+#         server: '{{clusterUrl}}'
+#         namespace: '{{environment}}'
+#       syncPolicy:
+#         automated:
+#           prune: true
+#           selfHeal: true
