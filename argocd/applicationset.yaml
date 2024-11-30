@@ -4,18 +4,14 @@ metadata:
   name: nginx-applicationset
   namespace: argocd
 spec:
+  syncPolicy:
+    preserveResourcesOnDeletion: true
   generators:
     - list:
         elements:
-          - cluster: docker-desktop
+          - cluster: ekstop-dev
             clusterUrl: https://kubernetes.default.svc
             environment: dev
-          - cluster: docker-desktop
-            clusterUrl: https://kubernetes.default.svc
-            environment: qa
-          - cluster: docker-desktop
-            clusterUrl: https://kubernetes.default.svc
-            environment: prod
   template:
     metadata:
       name: nginx-{{environment}}
@@ -27,13 +23,14 @@ spec:
         path: kustomize/overlays/{{environment}}
         kustomize:
           namePrefix: nginx-{{environment}}-
+          namespace: {{environment}}
       destination:
-        server: '{{clusterUrl}}'
+        server: '{{cluster}}'
         namespace: '{{environment}}'
       syncPolicy:
         automated:
-          prune: true
-          selfHeal: true
+          prune: false
+          selfHeal: false
 # apiVersion: argoproj.io/v1alpha1
 # kind: ApplicationSet
 # metadata:
