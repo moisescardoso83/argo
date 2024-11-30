@@ -31,7 +31,6 @@ spec:
       source:
         kustomize:
           namePrefix: '{{ appName }}'
-          namespace: '{{ namespace }}'
         path: '{{ appName }}/overlays/{{ environment }}'
         repoURL: '{{ repositoryUrl }}'
         targetRevision: '{{ targetRevision }}'
