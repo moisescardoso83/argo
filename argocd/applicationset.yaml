@@ -4,64 +4,23 @@ metadata:
   name: nginx-applicationset
   namespace: argocd
 spec:
-  syncPolicy:
-    preserveResourcesOnDeletion: true # Garante que os recursos não serão removidos se o ApplicationSet for deletado
   generators:
     - list:
         elements:
           - cluster: ekstop-dev
-            clusterUrl: https://kubernetes.default.svc
             environment: dev
-  template:
     metadata:
-      name: nginx-'{{ environment }}' # Nome da aplicação, incluindo o ambiente como sufixo
+      name: nginx-{{environment}}
     spec:
-      project: default # Projeto ArgoCD no qual esta aplicação reside
+      project: default
       source:
-        repoURL: 'https://github.com/moisescardoso83/argo.git' # Repositório Git contendo os manifests
-        targetRevision: main # Branch ou tag do repositório Git
-        path: kustomize/overlays/'{{ environment }}' # Caminho para os overlays do Kustomize
-        kustomize:
-          namePrefix: nginx-'{{ environment }}'- # Prefixo de nome para os recursos gerados
-          namespace: '{{ environment }}' # Namespace onde os recursos serão implantados
+        repoURL: 'https://github.com/moisescardoso83/argo.git'
+        targetRevision: main
+        path: kustomize/overlays/{{environment}}
       destination:
-        server: '{{ cluster }}' # Servidor Kubernetes de destino
-        namespace: '{{ environment }}' # Namespace de destino no cluster
+        server: '{{cluster}}'
+        namespace: '{{environment}}'
       syncPolicy:
         automated:
-          prune: false # Desabilita a remoção automática de recursos orfãos
-          selfHeal: false # Desabilita a auto-correção de recursos modificados manualmente
-# apiVersion: argoproj.io/v1alpha1
-# kind: ApplicationSet
-# metadata:
-#   name: nginx-applicationset
-#   namespace: argocd
-# spec:
-#   generators:
-#     - list:
-#         elements:
-#           - cluster: docker-desktop
-#             clusterUrl: https://kubernetes.default.svc
-#             environment: dev
-#           - cluster: docker-desktop
-#             clusterUrl: https://kubernetes.default.svc
-#             environment: qa
-#           - cluster: docker-desktop
-#             clusterUrl: https://kubernetes.default.svc
-#             environment: prod 
-#   template:
-#     metadata:
-#       name: nginx-{{environment}}
-#     spec:
-#       project: default
-#       source:
-#         repoURL: 'https://github.com/moisescardoso83/argo.git'
-#         targetRevision: main
-#         path: kustomize/overlays/{{environment}}
-#       destination:
-#         server: '{{clusterUrl}}'
-#         namespace: '{{environment}}'
-#       syncPolicy:
-#         automated:
-#           prune: true
-#           selfHeal: true
+          prune: true
+          selfHeal: true
