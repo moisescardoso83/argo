@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   syncPolicy:
-    preserveResourcesOnDeletion: true
+    preserveResourcesOnDeletion: true # Garante que os recursos não serão removidos se o ApplicationSet for deletado
   generators:
     - list:
         elements:
@@ -14,23 +14,23 @@ spec:
             environment: dev
   template:
     metadata:
-      name: nginx-{{environment}}
+      name: nginx-{{environment}} # Nome da aplicação, incluindo o ambiente como sufixo
     spec:
-      project: default
+      project: default # Projeto ArgoCD no qual esta aplicação reside
       source:
-        repoURL: 'https://github.com/moisescardoso83/argo.git'
-        targetRevision: main
-        path: kustomize/overlays/{{environment}}
+        repoURL: 'https://github.com/moisescardoso83/argo.git' # Repositório Git contendo os manifests
+        targetRevision: main # Branch ou tag do repositório Git
+        path: kustomize/overlays/{{environment}} # Caminho para os overlays do Kustomize
         kustomize:
-          namePrefix: nginx-{{environment}}-
-          namespace: {{environment}}
+          namePrefix: nginx-{{environment}}- # Prefixo de nome para os recursos gerados
+          namespace: {{environment}} # Namespace onde os recursos serão implantados
       destination:
-        server: {{cluster}}
-        namespace: {{environment}}
+        server: {{cluster}} # Servidor Kubernetes de destino
+        namespace: {{environment}} # Namespace de destino no cluster
       syncPolicy:
         automated:
-          prune: false
-          selfHeal: false
+          prune: false # Desabilita a remoção automática de recursos orfãos
+          selfHeal: false # Desabilita a auto-correção de recursos modificados manualmente
 # apiVersion: argoproj.io/v1alpha1
 # kind: ApplicationSet
 # metadata:
