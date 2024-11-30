@@ -25,8 +25,8 @@ spec:
           namePrefix: nginx-{{environment}}-
           namespace: {{environment}}
       destination:
-        server: '{{cluster}}'
-        namespace: '{{environment}}'
+        server: {{cluster}}
+        namespace: {{environment}}
       syncPolicy:
         automated:
           prune: false
