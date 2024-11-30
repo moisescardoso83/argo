@@ -1,26 +1,37 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: nginx-applicationset
+  labels:
+    argocd.argoproj.io/instance: ekstop-dev
+  name: auth-core-builders
   namespace: argocd
 spec:
   generators:
     - list:
         elements:
-          - cluster: ekstop-dev
+          - appName: auth-core-builders
+            clusterName: ekstop-dev
+            clusterUrl: https://kubernetes.default.svc
             environment: dev
+            namespace: dev
+            project: ekstop-dev
+            repositoryUrl: https://github.com/moisescardoso83/argo.git
+            targetRevision: HEAD
+  syncPolicy:
+    preserveResourcesOnDeletion: true
+  template:
     metadata:
-      name: nginx-{{environment}}
+      name: '{{ appName }}'
+      namespace: '{{ namespace }}'
     spec:
-      project: default
-      source:
-        repoURL: 'https://github.com/moisescardoso83/argo.git'
-        targetRevision: main
-        path: kustomize/overlays/{{environment}}
       destination:
-        server: '{{cluster}}'
-        namespace: '{{environment}}'
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        namespace: '{{ namespace }}'
+        server: '{{ clusterName }}'
+      project: '{{ project }}'
+      source:
+        kustomize:
+          namePrefix: '{{ appName }}'
+          namespace: '{{ namespace }}'
+        path: '{{ appName }}/overlays/{{ environment }}'
+        repoURL: '{{ repositoryUrl }}'
+        targetRevision: '{{ targetRevision }}'
