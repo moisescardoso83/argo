@@ -14,19 +14,19 @@ spec:
             environment: dev
   template:
     metadata:
-      name: nginx-{{ environment }} # Nome da aplicação, incluindo o ambiente como sufixo
+      name: nginx-'{{ environment }}' # Nome da aplicação, incluindo o ambiente como sufixo
     spec:
       project: default # Projeto ArgoCD no qual esta aplicação reside
       source:
         repoURL: 'https://github.com/moisescardoso83/argo.git' # Repositório Git contendo os manifests
         targetRevision: main # Branch ou tag do repositório Git
-        path: kustomize/overlays/{{ environment }} # Caminho para os overlays do Kustomize
+        path: kustomize/overlays/'{{ environment }}' # Caminho para os overlays do Kustomize
         kustomize:
-          namePrefix: nginx-{{ environment }}- # Prefixo de nome para os recursos gerados
-          namespace: {{ environment }} # Namespace onde os recursos serão implantados
+          namePrefix: nginx-'{{ environment }}'- # Prefixo de nome para os recursos gerados
+          namespace: '{{ environment }}' # Namespace onde os recursos serão implantados
       destination:
-        server: {{ cluster }} # Servidor Kubernetes de destino
-        namespace: {{ environment }} # Namespace de destino no cluster
+        server: '{{ cluster }}' # Servidor Kubernetes de destino
+        namespace: '{{ environment }}' # Namespace de destino no cluster
       syncPolicy:
         automated:
           prune: false # Desabilita a remoção automática de recursos orfãos
